@@ -49,20 +49,24 @@ getToken :: IO String
 getToken = do
     handle <- openFile "src\\token.txt" ReadMode
     hGetLine handle
-grabPush :: IO ()
-grabPush = do
+
+
+grabPush :: Integer -> IO Integer
+grabPush time = do
     currTime <- currentUnixTime
     token <- getToken
     runReq defaultHttpConfig $ do
         r <- req
-            GET 
-            (https "api.pushbullet.com" /: "v2" /: "pushes")
-            NoReqBody
-            jsonResponse
-            (header "Access-Token" (BS.pack token) 
-                <> ("modified_after" =: (show (currTime - 50000) :: String))
-                <> ("active" =: ("true" :: String)))
+                GET
+                (https "api.pushbullet.com" /: "v2" /: "pushes")
+                NoReqBody
+                jsonResponse
+                ( header "Access-Token" (BS.pack token)
+                    <> ("modified_after" =: (show (currTime - 50000) :: String))
+                    <> ("active" =: ("true" :: String))
+                )
         liftIO $ print (responseBody r :: Value)
+    pure time
     
 
 app :: WS.ClientApp ()
@@ -70,10 +74,11 @@ app conn = do
     putStrLn "Connected!"
     forever $ do
         msg <- WS.receiveData conn
+        time <- currentUnixTime
         let received = decode $ BL.pack $ unpack msg :: Maybe RecData
         case received of
             Just a -> if mainType a == "tickle"
-                then grabPush 
+                then grabPush time
                 else undefined
 
         print received
