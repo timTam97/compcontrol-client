@@ -33,6 +33,7 @@ dependencies:
 - req
 - utf8-string
 - time
+- ormolu
 
 library:
   source-dirs: src

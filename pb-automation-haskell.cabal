@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 1e8b85d280b40c49b096c4a69ee473172d83f333932fa74052e0538fff6fdc53
+-- hash: dde0d9852ca12bd1239966e1aaaef2fcf9c065d74609ef03bf9ac97c62ea8ff3
 
 name:           pb-automation-haskell
 version:        0.1.0.0
@@ -28,6 +28,7 @@ source-repository head
 library
   exposed-modules:
       Lib
+      Orm
       Sys
   other-modules:
       Paths_pb_automation_haskell
@@ -41,6 +42,7 @@ library
     , monad-loops
     , mtl
     , network
+    , ormolu
     , req
     , text
     , time
@@ -64,6 +66,7 @@ executable pb-automation-haskell-exe
     , monad-loops
     , mtl
     , network
+    , ormolu
     , pb-automation-haskell
     , req
     , text
@@ -89,6 +92,7 @@ test-suite pb-automation-haskell-test
     , monad-loops
     , mtl
     , network
+    , ormolu
     , pb-automation-haskell
     , req
     , text
