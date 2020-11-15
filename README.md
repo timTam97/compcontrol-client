@@ -1,1 +1,1 @@
-pushbullet-automation-haskell
+# pb-automation-haskell
