@@ -30,6 +30,9 @@ dependencies:
 - aeson
 - monad-loops
 - bytestring
+- req
+- utf8-string
+- time
 
 library:
   source-dirs: src

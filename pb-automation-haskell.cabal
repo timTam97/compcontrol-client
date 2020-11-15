@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 96b19c46d5937b22b86c103603dd4713e1ab07d6a6af11a131e77b636eaedf9d
+-- hash: 1e8b85d280b40c49b096c4a69ee473172d83f333932fa74052e0538fff6fdc53
 
 name:           pb-automation-haskell
 version:        0.1.0.0
@@ -41,7 +41,10 @@ library
     , monad-loops
     , mtl
     , network
+    , req
     , text
+    , time
+    , utf8-string
     , websockets
     , wuss
   default-language: Haskell2010
@@ -62,7 +65,10 @@ executable pb-automation-haskell-exe
     , mtl
     , network
     , pb-automation-haskell
+    , req
     , text
+    , time
+    , utf8-string
     , websockets
     , wuss
   default-language: Haskell2010
@@ -84,7 +90,10 @@ test-suite pb-automation-haskell-test
     , mtl
     , network
     , pb-automation-haskell
+    , req
     , text
+    , time
+    , utf8-string
     , websockets
     , wuss
   default-language: Haskell2010
