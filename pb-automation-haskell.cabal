@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 3584f9594a5d23c6617cae47c8207b8dd8c8daf2875a288dcaad09e96610e843
+-- hash: 616d8380b7f8a907901aeb0cbf939f2dbf3c59f30de701e53415946eca387d2c
 
 name:           pb-automation-haskell
 version:        0.1.0.0
@@ -27,10 +27,11 @@ source-repository head
 
 library
   exposed-modules:
-      Lib
       Orm
       Sys
       Test
+      Util
+      Web
   other-modules:
       Paths_pb_automation_haskell
   hs-source-dirs:

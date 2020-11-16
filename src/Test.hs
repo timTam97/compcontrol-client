@@ -1,50 +1,50 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module Test where
-import Data.IORef
-import Control.Monad (forever)
-import Control.Monad.IO.Class
-import Control.Monad.Trans (liftIO)
-import Data.Aeson
--- import Data.Aeson (decode, defaultOptions)
-import Data.Aeson.TH
-import Data.Aeson.Types
-import qualified Data.ByteString.Char8 as BS
-import qualified Data.ByteString.Lazy.Char8 as BL
-import Data.Text (Text, unpack)
-import qualified Data.Text.IO as T
-import Data.Time.Clock.POSIX ( getPOSIXTime )
-import Network.HTTP.Req
-import qualified Network.WebSockets as WS
-import System.IO (IOMode (ReadMode), hGetLine, openFile)
-import qualified Wuss as WWS
-import Data.Maybe
 
+import Control.Monad.IO.Class ()
+import Data.Aeson
+  ( FromJSON (parseJSON),
+    Value (Object),
+    decode,
+    (.:),
+  )
+import Data.Aeson.TH ()
+import Data.Aeson.Types (prependFailure, typeMismatch)
+import qualified Data.ByteString.Lazy.Char8 as BL
+import Data.IORef (newIORef, readIORef, writeIORef)
+import Data.Maybe ()
+import Network.HTTP.Req ()
+import System.Environment
 
 data Push = Push {pushes :: [SubPushes]} deriving (Show)
 
-data SubPushes = SubPushes {
-  title :: String,
-  body :: String,
-  modified :: Double,
-  dismissed :: Bool,
-  sender_name :: String
-} deriving (Show)
+data SubPushes = SubPushes
+  { title :: String,
+    body :: String,
+    modified :: Double,
+    dismissed :: Bool,
+    sender_name :: String
+  }
+  deriving (Show)
 
 instance FromJSON Push where
-  parseJSON (Object v) = Push
-    <$> v .: "pushes"
+  parseJSON (Object v) =
+    Push
+      <$> v .: "pushes"
   parseJSON invalid =
-      prependFailure "parsing Coord failed, "
-          (typeMismatch "Object" invalid)
+    prependFailure
+      "parsing Coord failed, "
+      (typeMismatch "Object" invalid)
 
 instance FromJSON SubPushes where
-  parseJSON (Object v) = SubPushes
-    <$> v .: "title"
-    <*> v .: "body"
-    <*> v .: "modified"
-    <*> v .: "dismissed"
-    <*> v .: "sender_name"
+  parseJSON (Object v) =
+    SubPushes
+      <$> v .: "title"
+      <*> v .: "body"
+      <*> v .: "modified"
+      <*> v .: "dismissed"
+      <*> v .: "sender_name"
 
 getFile :: IO String
 getFile = readFile "src\\test.txt"
@@ -63,6 +63,11 @@ test1 = do
   -- val <- pot
   hmm <- readIORef pot
   case hmm of
-    2 -> modifyIORef pot (+1)
+    2 -> writeIORef pot 50
   val <- readIORef pot
   print val
+
+test2 :: IO ()
+test2 = do
+  tok <- getEnv "PB_TOKEN_USR"
+  print tok
