@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 616d8380b7f8a907901aeb0cbf939f2dbf3c59f30de701e53415946eca387d2c
+-- hash: f9063d423fd25b13cc7453ffe1f486890f753fab28a1bbc830d82cc2452a2af9
 
 name:           pb-automation-haskell
 version:        0.1.0.0
@@ -46,6 +46,7 @@ library
     , mtl
     , network
     , ormolu
+    , process
     , req
     , text
     , time
@@ -72,6 +73,7 @@ executable pb-automation-haskell-exe
     , network
     , ormolu
     , pb-automation-haskell
+    , process
     , req
     , text
     , time
@@ -99,6 +101,7 @@ test-suite pb-automation-haskell-test
     , network
     , ormolu
     , pb-automation-haskell
+    , process
     , req
     , text
     , time

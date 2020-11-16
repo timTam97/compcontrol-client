@@ -1,10 +1,12 @@
 {-# LANGUAGE ForeignFunctionInterface #-}
 
-module Sys (setSuspendState, lockWorkStation) where
+module Sys (setSuspendState, lockWorkStation, shutdownSystem) where
 
 import Foreign.Ptr (FunPtr, castPtrToFunPtr)
 import System.Win32.DLL (getProcAddress, loadLibraryEx)
 import System.Win32.Types (Addr, nullHANDLE)
+import Control.Exception (SomeException, try)
+import System.Process (callCommand) 
 
 type TripleBool = Bool -> Bool -> Bool -> IO ()
 
@@ -28,3 +30,8 @@ lockWorkStation :: IO ()
 lockWorkStation = do
   addr <- getFuncAddr "User32.dll" "LockWorkStation"
   lockWorkStation0 $ castPtrToFunPtr addr
+
+shutdownSystem :: IO ()
+shutdownSystem = do 
+  try (callCommand "shutdown /s /t 0") :: IO (Either SomeException ())
+  pure ()

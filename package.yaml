@@ -35,6 +35,7 @@ dependencies:
 - time
 - ormolu
 - http-client
+- process
 
 library:
   source-dirs: src
