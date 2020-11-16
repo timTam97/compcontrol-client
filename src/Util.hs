@@ -3,15 +3,13 @@ module Util where
 import Data.Aeson.Types (FromJSON (parseJSON), Value, parseMaybe)
 import Data.Time.Clock.POSIX (getPOSIXTime)
 import qualified Sys as SYS
-import System.IO (IOMode (ReadMode), hGetLine, openFile)
+import System.Environment (getEnv)
 
 currentUnixTime :: IO Integer
-currentUnixTime = do floor <$> getPOSIXTime
+currentUnixTime = floor <$> getPOSIXTime
 
 getToken :: IO String
-getToken = do
-  handle <- openFile "..\\token.txt" ReadMode
-  hGetLine handle
+getToken = getEnv "PB_TOKEN_SYS"
 
 fromJSONValue :: FromJSON a => Value -> Maybe a
 fromJSONValue = parseMaybe parseJSON
