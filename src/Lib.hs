@@ -8,30 +8,48 @@ module Lib where
 
 -- someFunc :: IO ()
 -- someFunc = putStrLn "someFunc"
-
-import Control.Monad (forever)
-import Control.Monad.IO.Class
+import Data.IORef ( newIORef, readIORef, writeIORef )
+import Control.Monad (forever, when)
+import Control.Monad.IO.Class ()
 import Control.Monad.Trans (liftIO)
 import Data.Aeson
+    ( decode,
+      defaultOptions,
+      FromJSON(parseJSON),
+      Options(fieldLabelModifier),
+      Value )
 -- import Data.Aeson (decode, defaultOptions)
-import Data.Aeson.TH
-import Data.Aeson.Types
+import Data.Aeson.TH ( deriveJSON )
+import Data.Aeson.Types ( parseMaybe )
 import qualified Data.ByteString.Char8 as BS
 import qualified Data.ByteString.Lazy.Char8 as BL
 import Data.Text (Text, unpack)
 import qualified Data.Text.IO as T
 import Data.Time.Clock.POSIX ( getPOSIXTime )
 import Network.HTTP.Req
+    ( (/:),
+      (=:),
+      defaultHttpConfig,
+      header,
+      https,
+      jsonResponse,
+      req,
+      responseBody,
+      runReq,
+      GET(GET),
+      NoReqBody(NoReqBody) )
 import qualified Network.WebSockets as WS
 import System.IO (IOMode (ReadMode), hGetLine, openFile)
 import qualified Wuss as WWS
-import Data.Maybe
+import Data.Maybe ( fromJust, isJust )
 import qualified Sys as SYS
-import Debug.Trace
+import Debug.Trace ()
 data RecData = RecData {mainType :: String, subtype :: Maybe String}
   deriving (Show)
 
-data Push = Push {pushes :: [SubPushes]} deriving (Show)
+newtype Push
+  = Push {pushes :: [SubPushes]}
+  deriving Show
 
 data SubPushes = SubPushes {
   title :: String,
@@ -84,7 +102,7 @@ interrogateResponse p n =
   where
     subPush = head $ pushes p
 
-grabPush :: Integer -> IO Push
+grabPush :: Integer -> IO (Maybe Push)
 grabPush t = do
   token <- getToken
   runReq defaultHttpConfig $ do
@@ -101,23 +119,26 @@ grabPush t = do
         )
     -- https://williamyaoh.com/posts/2019-10-19-a-cheatsheet-to-json-handling.html
     let parsed = fromJSONValue (responseBody r) :: Maybe Push
-    case parsed of
-      Just p -> pure p
+    liftIO $ print parsed
+    pure parsed
     -- liftIO $ print parsed
 
 app :: WS.ClientApp ()
 app conn = do
-  putStrLn "Connected!"
   time <- currentUnixTime
+  recentTime <- newIORef time
+  putStrLn "Connected!"
   forever $ do
     msg <- WS.receiveData conn
     let received = decode $ BL.pack $ unpack msg :: Maybe RecData
     case received of
       Just a ->
-        if mainType a == "tickle"
-          then do  grabPush time
-          else undefined
-
+        when (mainType a == "tickle") $ do
+          numTime <- readIORef recentTime
+          push <- grabPush numTime
+          when (isJust push) (do
+          newTime <- interrogateResponse (fromJust push) numTime
+          writeIORef recentTime newTime)
     print received
     liftIO $ T.putStrLn msg
 
