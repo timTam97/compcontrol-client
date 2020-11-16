@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: dde0d9852ca12bd1239966e1aaaef2fcf9c065d74609ef03bf9ac97c62ea8ff3
+-- hash: 3584f9594a5d23c6617cae47c8207b8dd8c8daf2875a288dcaad09e96610e843
 
 name:           pb-automation-haskell
 version:        0.1.0.0
@@ -30,6 +30,7 @@ library
       Lib
       Orm
       Sys
+      Test
   other-modules:
       Paths_pb_automation_haskell
   hs-source-dirs:
@@ -39,6 +40,7 @@ library
     , aeson
     , base >=4.7 && <5
     , bytestring
+    , http-client
     , monad-loops
     , mtl
     , network
@@ -63,6 +65,7 @@ executable pb-automation-haskell-exe
     , aeson
     , base >=4.7 && <5
     , bytestring
+    , http-client
     , monad-loops
     , mtl
     , network
@@ -89,6 +92,7 @@ test-suite pb-automation-haskell-test
     , aeson
     , base >=4.7 && <5
     , bytestring
+    , http-client
     , monad-loops
     , mtl
     , network
