@@ -1,10 +1,9 @@
 module Orm where
 
-import Ormolu
-import Data.Text
+import Data.Text (unpack)
+import Ormolu (defaultConfig, ormoluFile)
 
-
-doThing :: String -> IO ()
-doThing fileName = do 
-    txt <- ormoluFile defaultConfig (fileName :: String)
-    writeFile fileName $ unpack txt
+reformatFile :: String -> IO ()
+reformatFile fileName = do
+  txt <- ormoluFile defaultConfig (fileName :: String)
+  writeFile fileName $ unpack txt
