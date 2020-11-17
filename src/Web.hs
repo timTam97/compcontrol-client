@@ -1,10 +1,8 @@
-{-# LANGUAGE BangPatterns #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
 
 module Web (mainLoop) where
 
-import System.Timeout (timeout)
 import Control.Exception (try)
 import Control.Monad (forever, when)
 import Control.Monad.Loops (whileJust_)
@@ -35,6 +33,7 @@ import Network.HTTP.Req
     (=:),
   )
 import qualified Network.WebSockets as WS
+import System.Timeout (timeout)
 import Util
   ( currentUnixTime,
     fromJSONValue,
