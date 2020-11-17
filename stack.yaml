@@ -39,6 +39,7 @@ packages:
 # - git: https://github.com/commercialhaskell/stack.git
 #   commit: e7b331f14bcffb8367cd58fbfc8b40ec7642100a
 #
+rebuild-ghc-options: true
 extra-deps:
   # - Network.WebSockets.Client
   - conduit-1.2.13.1@sha256:afd4db7fe66ae7af3d418e1a932384a8dee08df2f6299cca80e53ba964ce1228,4371

@@ -45,7 +45,8 @@ executables:
   pb-automation-haskell-exe:
     main:                Main.hs
     source-dirs:         app
-    # ghc-options:
+    ghc-options:
+    - -optl-mwindows
     # - -threaded
     # - -rtsopts
     # - -with-rtsopts=-N

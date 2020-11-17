@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 3b00fad64756a6fdbb9aa889d4878b49005a32c300883e2c84e8d209adf92bd6
+-- hash: 4014e3409ab792b9a961a4af02adcaf4deb54ccabd11879e5300b5c2dc7cecfc
 
 name:           pb-automation-haskell
 version:        0.1.0.0
@@ -61,6 +61,7 @@ executable pb-automation-haskell-exe
       Paths_pb_automation_haskell
   hs-source-dirs:
       app
+  ghc-options: -optl-mwindows
   build-depends:
       Win32
     , aeson
