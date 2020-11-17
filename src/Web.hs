@@ -6,7 +6,6 @@ module Web (mainLoop) where
 import Control.Exception (try)
 import Control.Monad (forever, when)
 import Control.Monad.Loops (whileJust_)
-import Control.Monad.Trans (liftIO)
 import Data.Aeson
   ( Options (fieldLabelModifier),
     decode,
@@ -18,7 +17,6 @@ import qualified Data.ByteString.Lazy.Char8 as BL
 import Data.IORef (IORef, newIORef, readIORef, writeIORef)
 import Data.Maybe (fromJust, isJust)
 import Data.Text (Text, unpack)
-import qualified Data.Text.IO as T
 import Network.HTTP.Req
   ( GET (GET),
     NoReqBody (NoReqBody),
@@ -39,6 +37,7 @@ import Util
     fromJSONValue,
     getToken,
     processCommand,
+    writeLog,
   )
 import qualified Wuss as WWS
 
@@ -96,9 +95,7 @@ grabPush t = do
             <> ("limit" =: (1 :: Integer))
         )
     -- https://williamyaoh.com/posts/2019-10-19-a-cheatsheet-to-json-handling.html
-    let parsed = fromJSONValue (responseBody r) :: Maybe Push
-    liftIO $ print parsed
-    pure parsed
+    pure $ fromJSONValue (responseBody r)
 
 analyzePing :: IORef Integer -> Text -> IO ()
 analyzePing tme msg = do
@@ -111,16 +108,14 @@ analyzePing tme msg = do
         when (isJust push) $ do
           newTime <- interrogateResponse (fromJust push) numTime
           writeIORef tme newTime
-  print received
-  liftIO $ T.putStrLn msg
 
 app :: WS.ClientApp ()
 app conn = do
   time <- currentUnixTime
   recentTime <- newIORef time
-  putStrLn "Connected!"
+  writeLog "Connected"
   whileJust_ (timeout 35000000 $ do WS.receiveData conn :: IO Text) (analyzePing recentTime)
-  print "exiting"
+  writeLog "Exiting"
   WS.sendClose conn ("Bye!" :: Text)
 
 mainLoop :: IO ()
@@ -129,5 +124,5 @@ mainLoop = do
   forever $ do
     exc <- try (WWS.runSecureClient "stream.pushbullet.com" 443 ("/websocket/" <> token) app) :: IO (Either WS.ConnectionException ())
     case exc of
-      Left a -> print $ "Caught exception " ++ show a ++ ", continuing"
-      Right _ -> pure ()
+      Left a -> writeLog $ "Caught exception " ++ show a ++ ", continuing"
+      Right _ -> writeLog "Restarting connection"

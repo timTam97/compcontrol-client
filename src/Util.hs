@@ -1,4 +1,11 @@
-module Util where
+module Util
+  ( writeLog,
+    currentUnixTime,
+    getToken,
+    fromJSONValue,
+    processCommand,
+  )
+where
 
 import Data.Aeson.Types (FromJSON (parseJSON), Value, parseMaybe)
 import Data.Time (defaultTimeLocale, formatTime, getZonedTime)
@@ -31,8 +38,9 @@ fromJSONValue = parseMaybe parseJSON
 
 processCommand :: String -> IO ()
 processCommand c =
-  case c of
-    "sleep" -> SYS.setSuspendState False
-    "hibernate" -> SYS.setSuspendState True
-    "shut down" -> SYS.shutdownSystem
-    "lock" -> SYS.lockWorkStation
+  writeLog ("Command: " <> c)
+    >> case c of
+      "sleep" -> SYS.setSuspendState False
+      "hibernate" -> SYS.setSuspendState True
+      "shut down" -> SYS.shutdownSystem
+      "lock" -> SYS.lockWorkStation
