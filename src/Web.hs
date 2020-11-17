@@ -1,9 +1,13 @@
+{-# LANGUAGE BangPatterns #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
 
 module Web (mainLoop) where
 
+import Control.Concurrent.Timeout (timeout)
+import Control.Exception (try)
 import Control.Monad (forever, when)
+import Control.Monad.Loops (whileJust_)
 import Control.Monad.Trans (liftIO)
 import Data.Aeson
   ( Options (fieldLabelModifier),
@@ -13,7 +17,7 @@ import Data.Aeson
 import Data.Aeson.TH (deriveJSON)
 import qualified Data.ByteString.Char8 as BS
 import qualified Data.ByteString.Lazy.Char8 as BL
-import Data.IORef (newIORef, readIORef, writeIORef)
+import Data.IORef (IORef, newIORef, readIORef, writeIORef)
 import Data.Maybe (fromJust, isJust)
 import Data.Text (Text, unpack)
 import qualified Data.Text.IO as T
@@ -97,28 +101,34 @@ grabPush t = do
     liftIO $ print parsed
     pure parsed
 
+analyzePing :: IORef Integer -> Text -> IO ()
+analyzePing tme msg = do
+  let received = decode $ BL.pack $ unpack msg :: Maybe RecData
+  case received of
+    Just a ->
+      when (mainType a == "tickle") $ do
+        numTime <- readIORef tme
+        push <- grabPush numTime
+        when (isJust push) $ do
+          newTime <- interrogateResponse (fromJust push) numTime
+          writeIORef tme newTime
+  print received
+  liftIO $ T.putStrLn msg
+
 app :: WS.ClientApp ()
 app conn = do
   time <- currentUnixTime
   recentTime <- newIORef time
   putStrLn "Connected!"
-  forever $ do
-    msg <- WS.receiveData conn
-    let received = decode $ BL.pack $ unpack msg :: Maybe RecData
-    case received of
-      Just a ->
-        when (mainType a == "tickle") $ do
-          numTime <- readIORef recentTime
-          push <- grabPush numTime
-          when (isJust push) $ do
-            newTime <- interrogateResponse (fromJust push) numTime
-            writeIORef recentTime newTime
-    print received
-    liftIO $ T.putStrLn msg
-
+  whileJust_ (timeout 35000000 $ do WS.receiveData conn :: IO Text) (analyzePing recentTime)
+  print "exiting"
   WS.sendClose conn ("Bye!" :: Text)
 
 mainLoop :: IO ()
 mainLoop = do
   token <- getToken
-  WWS.runSecureClient "stream.pushbullet.com" 443 ("/websocket/" <> token) app
+  forever $ do
+    exc <- try (WWS.runSecureClient "stream.pushbullet.com" 443 ("/websocket/" <> token) app) :: IO (Either WS.ConnectionException ())
+    case exc of
+      Left a -> print $ "Caught exception " ++ show a ++ ", continuing"
+      Right _ -> pure ()
