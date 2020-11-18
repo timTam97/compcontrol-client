@@ -38,6 +38,7 @@ import Util
     getToken,
     processCommand,
     writeLog,
+    getUserName
   )
 import qualified Wuss as WWS
 
@@ -68,8 +69,9 @@ $(deriveJSON defaultOptions ''Push)
 $(deriveJSON defaultOptions ''SubPushes)
 
 interrogateResponse :: Push -> Integer -> IO Integer
-interrogateResponse p n =
-  if title subPush == "LENOVO-TIM"
+interrogateResponse p n = do
+  userName <- getUserName
+  if title subPush == userName
     && body subPush /= ""
     && not (dismissed subPush)
     then do

@@ -5,6 +5,7 @@ module Util
     fromJSONValue,
     processCommand,
     reformatFile,
+    getUserName
   )
 where
 
@@ -16,6 +17,9 @@ import Ormolu (defaultConfig, ormoluFile)
 import qualified Sys as SYS
 import System.Environment (getEnv)
 import System.IO (IOMode (AppendMode), hClose, hPutStrLn, openFile)
+
+getUserName :: IO String
+getUserName = SYS.getUserName
 
 reformatFile :: String -> IO ()
 reformatFile fileName = do

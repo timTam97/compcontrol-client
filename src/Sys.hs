@@ -1,12 +1,13 @@
 {-# LANGUAGE ForeignFunctionInterface #-}
 
-module Sys (setSuspendState, lockWorkStation, shutdownSystem) where
+module Sys (setSuspendState, lockWorkStation, shutdownSystem, getUserName) where
 
 import Control.Exception (SomeException, try)
 import Foreign.Ptr (FunPtr, castPtrToFunPtr)
 import System.Process (callCommand)
 import System.Win32.DLL (getProcAddress, loadLibraryEx)
 import System.Win32.Types (Addr, nullHANDLE)
+import System.Win32.Info ( getUserName )
 
 type TripleBool = Bool -> Bool -> Bool -> IO ()
 
