@@ -2,15 +2,18 @@
 
 module Sys (setSuspendState, lockWorkStation, shutdownSystem) where
 
+import Control.Exception (SomeException, try)
 import Foreign.Ptr (FunPtr, castPtrToFunPtr)
+import System.Process (callCommand)
 import System.Win32.DLL (getProcAddress, loadLibraryEx)
 import System.Win32.Types (Addr, nullHANDLE)
-import Control.Exception (SomeException, try)
-import System.Process (callCommand) 
 
 type TripleBool = Bool -> Bool -> Bool -> IO ()
 
-foreign import ccall "dynamic" setSuspendState0 :: FunPtr TripleBool -> TripleBool
+foreign import ccall "dynamic"
+  setSuspendState0 ::
+    FunPtr TripleBool ->
+    TripleBool
 
 foreign import ccall "dynamic" lockWorkStation0 :: FunPtr (IO ()) -> IO ()
 
@@ -32,6 +35,6 @@ lockWorkStation = do
   lockWorkStation0 $ castPtrToFunPtr addr
 
 shutdownSystem :: IO ()
-shutdownSystem = do 
+shutdownSystem = do
   try (callCommand "shutdown /s /t 0") :: IO (Either SomeException ())
   pure ()

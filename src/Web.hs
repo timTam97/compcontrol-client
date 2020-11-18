@@ -114,7 +114,9 @@ app conn = do
   time <- currentUnixTime
   recentTime <- newIORef time
   writeLog "Connected"
-  whileJust_ (timeout 35000000 $ do WS.receiveData conn :: IO Text) (analyzePing recentTime)
+  whileJust_
+    (timeout 35000000 $ do WS.receiveData conn :: IO Text)
+    (analyzePing recentTime)
   writeLog "Exiting"
   WS.sendClose conn ("Bye!" :: Text)
 
@@ -122,7 +124,14 @@ mainLoop :: IO ()
 mainLoop = do
   token <- getToken
   forever $ do
-    exc <- try (WWS.runSecureClient "stream.pushbullet.com" 443 ("/websocket/" <> token) app) :: IO (Either WS.ConnectionException ())
+    exc <-
+      try $
+        WWS.runSecureClient
+          "stream.pushbullet.com"
+          443
+          ("/websocket/" <> token)
+          app ::
+        IO (Either WS.ConnectionException ())
     case exc of
       Left a -> writeLog $ "Caught exception " ++ show a ++ ", continuing"
       Right _ -> writeLog "Restarting connection"
