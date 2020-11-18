@@ -4,15 +4,23 @@ module Util
     getToken,
     fromJSONValue,
     processCommand,
+    reformatFile,
   )
 where
 
 import Data.Aeson.Types (FromJSON (parseJSON), Value, parseMaybe)
+import Data.Text (unpack)
 import Data.Time (defaultTimeLocale, formatTime, getZonedTime)
 import Data.Time.Clock.POSIX (getPOSIXTime)
+import Ormolu (defaultConfig, ormoluFile)
 import qualified Sys as SYS
 import System.Environment (getEnv)
 import System.IO (IOMode (AppendMode), hClose, hPutStrLn, openFile)
+
+reformatFile :: String -> IO ()
+reformatFile fileName = do
+  txt <- ormoluFile defaultConfig (fileName :: String)
+  writeFile fileName $ unpack txt
 
 logTimeStr :: IO String
 logTimeStr = do
