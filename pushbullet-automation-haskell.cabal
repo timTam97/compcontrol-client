@@ -4,16 +4,16 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: d265b51c2a58f2e7b216c164264a30b90d1a2be568df24df42b4e2a05f59d1a6
+-- hash: 45757e1c88b1510f841d4672eca1d2d0d3023d96f8a3ef631d0a3b1ab13caacc
 
-name:           pb-automation-haskell
+name:           pushbullet-automation-haskell
 version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/githubuser/pb-automation-haskell#readme>
-homepage:       https://github.com/githubuser/pb-automation-haskell#readme
-bug-reports:    https://github.com/githubuser/pb-automation-haskell/issues
-author:         Author name here
-maintainer:     example@example.com
-copyright:      2020 Author name here
+description:    Please see the README on GitHub at <https://github.com/timTam97/pushbullet-automation-haskell#readme>
+homepage:       https://github.com/timTam97/pushbullet-automation-haskell#readme
+bug-reports:    https://github.com/timTam97/pushbullet-automation-haskell/issues
+author:         Timothy Samraj
+maintainer:     Timothy Samraj
+copyright:      2020 Timothy Samraj
 license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
@@ -23,7 +23,7 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/githubuser/pb-automation-haskell
+  location: https://github.com/timTam97/pushbullet-automation-haskell
 
 library
   exposed-modules:
@@ -32,7 +32,7 @@ library
       Util
       Web
   other-modules:
-      Paths_pb_automation_haskell
+      Paths_pushbullet_automation_haskell
   hs-source-dirs:
       src
   build-depends:
@@ -54,10 +54,10 @@ library
     , wuss
   default-language: Haskell2010
 
-executable pb-automation-haskell-exe
+executable pushbullet-automation-haskell-exe
   main-is: Main.hs
   other-modules:
-      Paths_pb_automation_haskell
+      Paths_pushbullet_automation_haskell
   hs-source-dirs:
       app
   ghc-options: -optl-mwindows
@@ -71,8 +71,8 @@ executable pb-automation-haskell-exe
     , mtl
     , network
     , ormolu
-    , pb-automation-haskell
     , process
+    , pushbullet-automation-haskell
     , req
     , text
     , time
@@ -81,11 +81,11 @@ executable pb-automation-haskell-exe
     , wuss
   default-language: Haskell2010
 
-test-suite pb-automation-haskell-test
+test-suite pushbullet-automation-haskell-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
-      Paths_pb_automation_haskell
+      Paths_pushbullet_automation_haskell
   hs-source-dirs:
       test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
@@ -99,8 +99,8 @@ test-suite pb-automation-haskell-test
     , mtl
     , network
     , ormolu
-    , pb-automation-haskell
     , process
+    , pushbullet-automation-haskell
     , req
     , text
     , time
