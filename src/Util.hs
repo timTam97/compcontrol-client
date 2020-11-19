@@ -5,7 +5,7 @@ module Util
     fromJSONValue,
     processCommand,
     reformatFile,
-    getUserName
+    getComputerName
   )
 where
 
@@ -18,8 +18,8 @@ import qualified Sys as SYS
 import System.Environment (getEnv)
 import System.IO (IOMode (AppendMode), hClose, hPutStrLn, openFile)
 
-getUserName :: IO String
-getUserName = SYS.getUserName
+getComputerName :: IO String
+getComputerName = SYS.getComputerName
 
 reformatFile :: String -> IO ()
 reformatFile fileName = do

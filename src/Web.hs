@@ -38,7 +38,7 @@ import Util
     getToken,
     processCommand,
     writeLog,
-    getUserName
+    getComputerName
   )
 import qualified Wuss as WWS
 
@@ -70,8 +70,8 @@ $(deriveJSON defaultOptions ''SubPushes)
 
 interrogateResponse :: Push -> Integer -> IO Integer
 interrogateResponse p n = do
-  userName <- getUserName
-  if title subPush == userName
+  computerName <- getComputerName
+  if title subPush == computerName
     && body subPush /= ""
     && not (dismissed subPush)
     then do
