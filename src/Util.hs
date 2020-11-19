@@ -23,7 +23,7 @@ getUserName = SYS.getUserName
 
 reformatFile :: String -> IO ()
 reformatFile fileName = do
-  txt <- ormoluFile defaultConfig (fileName :: String)
+  txt <- ormoluFile defaultConfig fileName
   writeFile fileName $ unpack txt
 
 logTimeStr :: IO String
