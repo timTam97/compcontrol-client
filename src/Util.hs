@@ -11,7 +11,7 @@ where
 
 import Data.Aeson.Types (FromJSON (parseJSON), Value, parseMaybe)
 import Data.Text (unpack)
-import Data.Time (defaultTimeLocale, formatTime, getZonedTime)
+import Data.Time (defaultTimeLocale, formatTime, getZonedTime, ZonedTime)
 import Data.Time.Clock.POSIX (getPOSIXTime)
 import Ormolu (defaultConfig, ormoluFile)
 import qualified Sys as SYS
@@ -26,16 +26,15 @@ reformatFile fileName = do
   txt <- ormoluFile defaultConfig fileName
   writeFile fileName $ unpack txt
 
-logTimeStr :: IO String
-logTimeStr = do
-  now <- getZonedTime
-  let str = formatTime defaultTimeLocale "%Y-%m-%d %H:%M:%S" now
-  pure $ "[" <> str <> "] "
+logTimeStr :: ZonedTime -> String
+logTimeStr zt = "[" <> str <> "] "
+  where str = formatTime defaultTimeLocale "%Y-%m-%d %H:%M:%S" zt
 
 writeLog :: String -> IO ()
 writeLog str = do
   file <- openFile ".\\run.log" AppendMode
-  time <- logTimeStr
+  now <- getZonedTime
+  let time = logTimeStr now
   hPutStrLn file $ time <> str
   hClose file
 
