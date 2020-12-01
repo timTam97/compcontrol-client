@@ -45,18 +45,6 @@ import qualified Wuss as WWS
 data RecData = RecData {mainType :: String, subtype :: Maybe String}
   deriving (Show)
 
-newtype Push = Push {pushes :: [SubPushes]}
-  deriving (Show)
-
-data SubPushes = SubPushes
-  { title :: String,
-    body :: String,
-    modified :: Double,
-    dismissed :: Bool,
-    sender_name :: String
-  }
-  deriving (Show)
-
 -- https://stackoverflow.com/questions/48474587/how-to-deal-with-haskells-reserved-keywords-in-record-fields
 $( deriveJSON
      defaultOptions
@@ -65,8 +53,6 @@ $( deriveJSON
        }
      ''RecData
  )
-$(deriveJSON defaultOptions ''Push)
-$(deriveJSON defaultOptions ''SubPushes)
 
 analyzePing :: IORef Integer -> Text -> IO ()
 analyzePing tme msg = do
