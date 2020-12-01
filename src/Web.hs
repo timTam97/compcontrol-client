@@ -72,7 +72,7 @@ interrogateResponse :: Push -> Integer -> IO Integer
 interrogateResponse p n = do
   computerName <- getComputerName
   if title subPush == computerName
-    && body subPush /= ""
+    && body subPush `elem` ["sleep", "hibernate", "lock", "shut down"]
     && not (dismissed subPush)
     then do
       processCommand $ body subPush
@@ -92,7 +92,7 @@ grabPush t = do
         NoReqBody
         jsonResponse
         ( header "Access-Token" (BS.pack token)
-            <> ("modified_after" =: (show t :: String))
+            <> ("modified_after" =: show t)
             <> ("active" =: ("true" :: String))
             <> ("limit" =: (1 :: Integer))
         )
@@ -117,7 +117,7 @@ app conn = do
   recentTime <- newIORef time
   writeLog "Connected"
   whileJust_
-    (timeout 35000000 $ do WS.receiveData conn :: IO Text)
+    (timeout 35000000 $ do WS.receiveData conn)
     (analyzePing recentTime)
   writeLog "Exiting"
   WS.sendClose conn ("Bye!" :: Text)
@@ -135,5 +135,5 @@ mainLoop = do
           app ::
         IO (Either WS.ConnectionException ())
     case exc of
-      Left a -> writeLog $ "Caught exception " ++ show a ++ ", continuing"
+      Left a -> writeLog $ "Caught exception " ++ show a ++ ", restarting"
       Right _ -> writeLog "Restarting connection"
