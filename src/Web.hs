@@ -35,10 +35,10 @@ import System.Timeout (timeout)
 import Util
   ( currentUnixTime,
     fromJSONValue,
+    getComputerName,
     getToken,
     processCommand,
     writeLog,
-    getComputerName
   )
 import qualified Wuss as WWS
 
@@ -104,12 +104,12 @@ analyzePing tme msg = do
   let received = decode $ BL.pack $ unpack msg :: Maybe RecData
   case received of
     Just a ->
-      when (mainType a == "tickle") $ do
-        numTime <- readIORef tme
-        push <- grabPush numTime
-        when (isJust push) $ do
-          newTime <- interrogateResponse (fromJust push) numTime
-          writeIORef tme newTime
+      when
+        ( mainType a == "command"
+            && isJust (subtype a)
+            && fromJust (subtype a) `elem` ["sleep", "hibernate", "lock", "shutdown"]
+        )
+        $ processCommand $ fromJust (subtype a)
 
 app :: WS.ClientApp ()
 app conn = do
@@ -117,7 +117,7 @@ app conn = do
   recentTime <- newIORef time
   writeLog "Connected"
   whileJust_
-    (timeout 35000000 $ do WS.receiveData conn)
+    (timeout 65000000 $ do WS.receiveData conn)
     (analyzePing recentTime)
   writeLog "Exiting"
   WS.sendClose conn ("Bye!" :: Text)
@@ -129,9 +129,9 @@ mainLoop = do
     exc <-
       try $
         WWS.runSecureClient
-          "stream.pushbullet.com"
+          "7dnxz6rxlh.execute-api.ap-southeast-2.amazonaws.com"
           443
-          ("/websocket/" <> token)
+          "/Prod"
           app ::
         IO (Either WS.ConnectionException ())
     case exc of

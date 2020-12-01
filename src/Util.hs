@@ -53,5 +53,5 @@ processCommand c =
     >> case c of
       "sleep" -> SYS.setSuspendState False
       "hibernate" -> SYS.setSuspendState True
-      "shut down" -> SYS.shutdownSystem
+      "shutdown" -> SYS.shutdownSystem
       "lock" -> SYS.lockWorkStation
