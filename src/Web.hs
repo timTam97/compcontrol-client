@@ -12,34 +12,12 @@ import Data.Aeson
     defaultOptions,
   )
 import Data.Aeson.TH (deriveJSON)
-import qualified Data.ByteString.Char8 as BS
 import qualified Data.ByteString.Lazy.Char8 as BL
-import Data.IORef (IORef, newIORef, readIORef, writeIORef)
 import Data.Maybe (fromJust, isJust)
 import Data.Text (Text, unpack)
-import Network.HTTP.Req
-  ( GET (GET),
-    NoReqBody (NoReqBody),
-    defaultHttpConfig,
-    header,
-    https,
-    jsonResponse,
-    req,
-    responseBody,
-    runReq,
-    (/:),
-    (=:),
-  )
 import qualified Network.WebSockets as WS
 import System.Timeout (timeout)
-import Util
-  ( currentUnixTime,
-    fromJSONValue,
-    getComputerName,
-    getToken,
-    processCommand,
-    writeLog,
-  )
+import Util (processCommand, writeLog)
 import qualified Wuss as WWS
 
 data RecData = RecData {mainType :: String, subtype :: Maybe String}
@@ -54,9 +32,8 @@ $( deriveJSON
      ''RecData
  )
 
-analyzePing :: IORef Integer -> Text -> IO ()
-analyzePing tme msg = do
-  let received = decode $ BL.pack $ unpack msg :: Maybe RecData
+analyzePing :: Text -> IO ()
+analyzePing msg =
   case received of
     Just a ->
       when
@@ -65,21 +42,20 @@ analyzePing tme msg = do
             && fromJust (subtype a) `elem` ["sleep", "hibernate", "lock", "shutdown"]
         )
         $ processCommand $ fromJust (subtype a)
+  where
+    received = decode $ BL.pack $ unpack msg :: Maybe RecData
 
 app :: WS.ClientApp ()
 app conn = do
-  time <- currentUnixTime
-  recentTime <- newIORef time
   writeLog "Connected"
   whileJust_
     (timeout 65000000 $ do WS.receiveData conn)
-    (analyzePing recentTime)
+    analyzePing
   writeLog "Exiting"
   WS.sendClose conn ("Bye!" :: Text)
 
 mainLoop :: IO ()
 mainLoop = do
-  token <- getToken
   forever $ do
     exc <-
       try $
