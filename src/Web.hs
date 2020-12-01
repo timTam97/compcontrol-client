@@ -68,37 +68,6 @@ $( deriveJSON
 $(deriveJSON defaultOptions ''Push)
 $(deriveJSON defaultOptions ''SubPushes)
 
-interrogateResponse :: Push -> Integer -> IO Integer
-interrogateResponse p n = do
-  computerName <- getComputerName
-  if title subPush == computerName
-    && body subPush `elem` ["sleep", "hibernate", "lock", "shut down"]
-    && not (dismissed subPush)
-    then do
-      processCommand $ body subPush
-      pure $ floor $ modified subPush
-    else pure n
-  where
-    subPush = head $ pushes p
-
-grabPush :: Integer -> IO (Maybe Push)
-grabPush t = do
-  token <- getToken
-  runReq defaultHttpConfig $ do
-    r <-
-      req
-        GET
-        (https "api.pushbullet.com" /: "v2" /: "pushes")
-        NoReqBody
-        jsonResponse
-        ( header "Access-Token" (BS.pack token)
-            <> ("modified_after" =: show t)
-            <> ("active" =: ("true" :: String))
-            <> ("limit" =: (1 :: Integer))
-        )
-    -- https://williamyaoh.com/posts/2019-10-19-a-cheatsheet-to-json-handling.html
-    pure $ fromJSONValue (responseBody r)
-
 analyzePing :: IORef Integer -> Text -> IO ()
 analyzePing tme msg = do
   let received = decode $ BL.pack $ unpack msg :: Maybe RecData
