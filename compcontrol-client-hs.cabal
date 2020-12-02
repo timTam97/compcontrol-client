@@ -4,13 +4,13 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 45757e1c88b1510f841d4672eca1d2d0d3023d96f8a3ef631d0a3b1ab13caacc
+-- hash: cf0414ce71525a1bc4d0ee9500f2bf3e97a3fb1f25aae2c772ffa7fa52e771b8
 
-name:           pushbullet-automation-haskell
-version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/timTam97/pushbullet-automation-haskell#readme>
-homepage:       https://github.com/timTam97/pushbullet-automation-haskell#readme
-bug-reports:    https://github.com/timTam97/pushbullet-automation-haskell/issues
+name:           compcontrol-client-hs
+version:        2.0.0
+description:    Please see the README on GitHub at <https://github.com/timTam97/compcontrol-client-hs/blob/master/README.md>
+homepage:       https://github.com/timTam97/compcontrol-client-hs#readme
+bug-reports:    https://github.com/timTam97/compcontrol-client-hs/issues
 author:         Timothy Samraj
 maintainer:     Timothy Samraj
 copyright:      2020 Timothy Samraj
@@ -23,7 +23,7 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/timTam97/pushbullet-automation-haskell
+  location: https://github.com/timTam97/compcontrol-client-hs
 
 library
   exposed-modules:
@@ -32,7 +32,7 @@ library
       Util
       Web
   other-modules:
-      Paths_pushbullet_automation_haskell
+      Paths_compcontrol_client_hs
   hs-source-dirs:
       src
   build-depends:
@@ -54,10 +54,10 @@ library
     , wuss
   default-language: Haskell2010
 
-executable pushbullet-automation-haskell-exe
+executable compcontrol-client-hs-exe
   main-is: Main.hs
   other-modules:
-      Paths_pushbullet_automation_haskell
+      Paths_compcontrol_client_hs
   hs-source-dirs:
       app
   ghc-options: -optl-mwindows
@@ -66,13 +66,13 @@ executable pushbullet-automation-haskell-exe
     , aeson
     , base >=4.7 && <5
     , bytestring
+    , compcontrol-client-hs
     , http-client
     , monad-loops
     , mtl
     , network
     , ormolu
     , process
-    , pushbullet-automation-haskell
     , req
     , text
     , time
@@ -81,11 +81,11 @@ executable pushbullet-automation-haskell-exe
     , wuss
   default-language: Haskell2010
 
-test-suite pushbullet-automation-haskell-test
+test-suite compcontrol-client-hs-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
-      Paths_pushbullet_automation_haskell
+      Paths_compcontrol_client_hs
   hs-source-dirs:
       test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
@@ -94,13 +94,13 @@ test-suite pushbullet-automation-haskell-test
     , aeson
     , base >=4.7 && <5
     , bytestring
+    , compcontrol-client-hs
     , http-client
     , monad-loops
     , mtl
     , network
     , ormolu
     , process
-    , pushbullet-automation-haskell
     , req
     , text
     , time

@@ -1,6 +1,6 @@
-name:                pushbullet-automation-haskell
-version:             0.1.0.0
-github:              "timTam97/pushbullet-automation-haskell"
+name:                compcontrol-client-hs
+version:             2.0.0
+github:              "timTam97/compcontrol-client-hs"
 license:             BSD3
 author:              "Timothy Samraj"
 copyright:           "2020 Timothy Samraj"
@@ -16,7 +16,7 @@ extra-source-files:
 # To avoid duplicated efforts in documentation and dealing with the
 # complications of embedding Haddock markup inside cabal files, it is
 # common to point users to the README.md file.
-description:         Please see the README on GitHub at <https://github.com/timTam97/pushbullet-automation-haskell#readme>
+description:         Please see the README on GitHub at <https://github.com/timTam97/compcontrol-client-hs/blob/master/README.md>
 
 dependencies:
 - base >= 4.7 && < 5
@@ -41,7 +41,7 @@ library:
   source-dirs: src
 
 executables:
-  pushbullet-automation-haskell-exe:
+  compcontrol-client-hs-exe:
     main:                Main.hs
     source-dirs:         app
     ghc-options:
@@ -50,10 +50,10 @@ executables:
     # - -rtsopts
     # - -with-rtsopts=-N
     dependencies:
-    - pushbullet-automation-haskell
+    - compcontrol-client-hs
 
 tests:
-  pushbullet-automation-haskell-test:
+  compcontrol-client-hs-test:
     main:                Spec.hs
     source-dirs:         test
     ghc-options:
@@ -61,4 +61,4 @@ tests:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
-    - pushbullet-automation-haskell
+    - compcontrol-client-hs
