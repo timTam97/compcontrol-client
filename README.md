@@ -1,5 +1,7 @@
 # pushbullet-automation-haskell
 
+**Note: This branch interfaces with the Pushbullet API and is no longer maintained. See the `aws-dev` branch for the updated version (not compatible with the Pushbullet API).**
+
 A Haskell re-implementation of [Pushbullet Automation.](https://github.com/timTam97/pushbullet-automation) Allows you to remotely control your computer by making web requests.
 
 ## Getting Started
