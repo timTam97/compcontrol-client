@@ -36,6 +36,6 @@ lockWorkStation = do
   lockWorkStation0 $ castPtrToFunPtr addr
 
 shutdownSystem :: IO ()
-shutdownSystem = do
-  try (callCommand "shutdown /s /t 0") :: IO (Either SomeException ())
-  pure ()
+shutdownSystem =
+  (try (callCommand "shutdown /s /t 0") :: IO (Either SomeException ()))
+    >> pure ()

@@ -1,25 +1,17 @@
 module Util
   ( writeLog,
-    currentUnixTime,
-    getToken,
-    fromJSONValue,
+    getWebSocketURI,
     processCommand,
-    reformatFile,
-    getComputerName
+    reformatFile
   )
 where
 
-import Data.Aeson.Types (FromJSON (parseJSON), Value, parseMaybe)
 import Data.Text (unpack)
 import Data.Time (defaultTimeLocale, formatTime, getZonedTime, ZonedTime)
-import Data.Time.Clock.POSIX (getPOSIXTime)
 import Ormolu (defaultConfig, ormoluFile)
 import qualified Sys as SYS
 import System.Environment (getEnv)
 import System.IO (IOMode (AppendMode), hClose, hPutStrLn, openFile)
-
-getComputerName :: IO String
-getComputerName = SYS.getComputerName
 
 reformatFile :: String -> IO ()
 reformatFile fileName = do
@@ -38,14 +30,8 @@ writeLog str = do
   hPutStrLn file $ time <> str
   hClose file
 
-currentUnixTime :: IO Integer
-currentUnixTime = floor <$> getPOSIXTime
-
-getToken :: IO String
-getToken = getEnv "PB_TOKEN_SYS"
-
-fromJSONValue :: FromJSON a => Value -> Maybe a
-fromJSONValue = parseMaybe parseJSON
+getWebSocketURI :: IO String
+getWebSocketURI = getEnv "AWS_WSS_URI"
 
 processCommand :: String -> IO ()
 processCommand c =

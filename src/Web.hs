@@ -17,7 +17,7 @@ import Data.Maybe (fromJust, isJust)
 import Data.Text (Text, unpack)
 import qualified Network.WebSockets as WS
 import System.Timeout (timeout)
-import Util (processCommand, writeLog)
+import Util (processCommand, writeLog, getWebSocketURI)
 import qualified Wuss as WWS
 
 data RecData = RecData {mainType :: String, subtype :: Maybe String}
@@ -46,21 +46,22 @@ analyzePing msg =
     received = decode $ BL.pack $ unpack msg :: Maybe RecData
 
 app :: WS.ClientApp ()
-app conn = do
+app conn =
   writeLog "Connected"
-  whileJust_
-    (timeout 65000000 $ do WS.receiveData conn)
-    analyzePing
-  writeLog "Exiting"
-  WS.sendClose conn ("Bye!" :: Text)
+    >> whileJust_
+      (timeout 65000000 $ do WS.receiveData conn)
+      analyzePing
+    >> writeLog "Exiting"
+    >> WS.sendClose conn ("Bye!" :: Text)
 
 mainLoop :: IO ()
 mainLoop = do
   forever $ do
+    uri <- getWebSocketURI
     exc <-
       try $
         WWS.runSecureClient
-          "7dnxz6rxlh.execute-api.ap-southeast-2.amazonaws.com"
+          uri
           443
           "/Prod"
           app ::
