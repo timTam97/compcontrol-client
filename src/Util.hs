@@ -1,13 +1,13 @@
 module Util
   ( writeLog,
-    getWebSocketURI,
+    getWebsocketToken,
     processCommand,
-    reformatFile
+    reformatFile,
   )
 where
 
 import Data.Text (unpack)
-import Data.Time (defaultTimeLocale, formatTime, getZonedTime, ZonedTime)
+import Data.Time (ZonedTime, defaultTimeLocale, formatTime, getZonedTime)
 import Ormolu (defaultConfig, ormoluFile)
 import qualified Sys as SYS
 import System.Environment (getEnv)
@@ -20,7 +20,8 @@ reformatFile fileName = do
 
 logTimeStr :: ZonedTime -> String
 logTimeStr zt = "[" <> str <> "] "
-  where str = formatTime defaultTimeLocale "%Y-%m-%d %H:%M:%S" zt
+  where
+    str = formatTime defaultTimeLocale "%Y-%m-%d %H:%M:%S" zt
 
 writeLog :: String -> IO ()
 writeLog str = do
@@ -30,8 +31,8 @@ writeLog str = do
   hPutStrLn file $ time <> str
   hClose file
 
-getWebSocketURI :: IO String
-getWebSocketURI = getEnv "AWS_WSS_URI"
+getWebsocketToken :: IO String
+getWebsocketToken = getEnv "WSS_TOKEN"
 
 processCommand :: String -> IO ()
 processCommand c =

@@ -12,12 +12,14 @@ import Data.Aeson
     defaultOptions,
   )
 import Data.Aeson.TH (deriveJSON)
+import qualified Data.ByteString.Char8 as BS
 import qualified Data.ByteString.Lazy.Char8 as BL
 import Data.Maybe (fromJust, isJust)
 import Data.Text (Text, unpack)
 import qualified Network.WebSockets as WS
+import Network.WebSockets.Connection (defaultConnectionOptions)
 import System.Timeout (timeout)
-import Util (processCommand, writeLog, getWebSocketURI)
+import Util (getWebsocketToken, processCommand, writeLog)
 import qualified Wuss as WWS
 
 data RecData = RecData {mainType :: String, subtype :: Maybe String}
@@ -57,13 +59,15 @@ app conn =
 mainLoop :: IO ()
 mainLoop = do
   forever $ do
-    uri <- getWebSocketURI
+    token <- getWebsocketToken
     exc <-
       try $
-        WWS.runSecureClient
-          uri
+        WWS.runSecureClientWith
+          "wss.timsam.live"
           443
-          "/Prod"
+          "/"
+          defaultConnectionOptions
+          [("auth", BS.pack token)]
           app ::
         IO (Either WS.ConnectionException ())
     case exc of
