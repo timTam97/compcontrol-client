@@ -16,6 +16,11 @@ Then, either download a pre-built [release](https://github.com/timTam97/compcont
 Simply double click the executable to run the program. The program runs silently, so no console window will pop up. In the folder where you started the program, there should be a text file called `run.log`. Open this file to verify that the program is successfully connected to the deployed API.
 
 ### Sending commands
+
+#### The easy way
+[Here's](https://www.icloud.com/shortcuts/6eb6e0c280ce460381ad95b67aea1aac) a shortcut for your iPhone that will enable you to control your computer from your phone.
+
+#### The slightly-less-easy way
 The URL to send commands to is `https://command.timsam.live/send/<command>`.
 - Replace `<command>` with the command you want to send to the client.
   - ❗ The client will only respond to `sleep`, `shutdown`, `lock` and `hibernate` commands.
