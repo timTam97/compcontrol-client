@@ -1,4 +1,4 @@
-# compcontrol-client-hs
+# compcontrol-client
 
 This app allows you to remotely control your computer by making web requests.
 
