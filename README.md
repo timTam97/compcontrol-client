@@ -18,7 +18,7 @@ This app allows you to remotely control your Windows machine by making web reque
 
 ### Get your API key
 
-If you don't have an API key already, visit https://command.timsam.live/getkey to get an API key.
+If you don't have an API key already, visit https://command.timsam.au/getkey to get an API key.
 
 Then, create a system environment variable called `WSS_TOKEN` and set its value as your API key.
 
@@ -42,7 +42,7 @@ Simply double click the executable to run the program. The program runs silently
 
 ### The slightly-less-easy way
 
-The URL to send commands to is `https://command.timsam.live/send/<command>`.
+The URL to send commands to is `https://command.timsam.au/send/<command>`.
 
 -   Replace `<command>` with the command you want to send to the client.
     -   ❗ The client will only respond to `sleep`, `shutdown`, `lock` and `hibernate` commands.
@@ -53,7 +53,7 @@ For example, if you wanted to send a sleep command and your token was `fwolXHYtG
 
 ```
 curl -H "auth: fwolXHYtGMbmAg" \
-     -X POST https://command.timsam.live/send/sleep
+     -X POST https://command.timsam.au/send/sleep
 ```
 
 The API will return a status code and JSON indicating success or failure.

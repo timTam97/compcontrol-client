@@ -63,7 +63,7 @@ mainLoop = do
     exc <-
       try $
         WWS.runSecureClientWith
-          "wss.timsam.live"
+          "wss.timsam.au"
           443
           "/"
           defaultConnectionOptions
